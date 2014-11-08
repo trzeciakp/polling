@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Poll.
+    -->
+    <changeSet id="20141108174834" author="jhipster">
+        <createTable tableName="T_POLL">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="max_score" type="integer"/>
+            <column name="user_login" type="varchar(255)"/>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="user_login"
+                                 baseTableName="T_POLL"
+                                 constraintName="fk_poll_user_id"
+                                 referencedColumnNames="login"
+                                 referencedTableName="T_USER"/>
+    </changeSet>
+</databaseChangeLog>
