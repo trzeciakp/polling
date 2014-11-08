@@ -317,5 +317,9 @@
         "title": "Error page!",
         "403": "You are not authorized to access the page."
     },
-    "footer": "This is your footer"
+    "footer": "This is your footer",
+    "poll" : {
+        "usersAllowed": "Users allowed:",
+        "invite": "Invite!"
+    }
 }

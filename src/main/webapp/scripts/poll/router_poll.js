@@ -12,7 +12,13 @@ pollingApp
                         }]
                     },
                     access: {
-                        authorizedRoles: [USER_ROLES.all]
+                        authorizedRoles: [USER_ROLES.user]
+                    }
+                }).when('/poll/:id', {
+                    templateUrl: 'views/poll-detail.html',
+                    controller: 'PollDetailController',
+                    access: {
+                        authorizedRoles: [USER_ROLES.user]
                     }
                 })
         });

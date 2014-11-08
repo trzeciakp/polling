@@ -1,10 +1,16 @@
 <div>
 
-    <h2>Polls</h2>
+    <h2>Poll - {{currentPoll.name}}</h2>
 
     <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#savePollModal" ng-click="clear()">
-        <span class="glyphicon glyphicon-flash"></span> Create a new Poll
+        <span class="glyphicon glyphicon-flash"></span> <span translate="poll.invite">Invite!</span>
     </button>
+    <button type="submit"
+            ng-click="update(currentPoll.id)"
+            class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-pencil"></span> Edit
+    </button>
+
     <div class="modal fade" id="savePollModal" tabindex="-1" role="dialog" aria-labelledby="myPollLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -53,33 +59,25 @@
                 </form>
             </div>
         </div>
-    </div>
+     </div>
 
+    <h3><span translate="poll.usersAllowed">Users allowed</span></h3>
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>MaxScore</th>
-                    <th>user</th>
+                    <th>Login</th>
+                    <th>Email</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="poll in polls">
-                    <td>{{poll.id}}</td>
-                    <td><a href="#/poll/{{poll.id}}">{{poll.name}}</a></td>
-                    <td>{{poll.maxScore}}</td>
-                    <td>{{poll.user.login}}</td>
+                <tr ng-repeat="user in users">
+                    <td>{{user.login}}</td>
+                    <td>{{user.email}}</td>
                     <td>
                         <button type="submit"
-                                ng-click="update(poll.id)"
-                                class="btn btn-default">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
-                        <button type="submit"
-                                ng-click="delete(poll.id)"
+                                ng-click="deleteUser(user.id)"
                                 class="btn btn-danger">
                             <span class="glyphicon glyphicon-remove-circle"></span> Delete
                         </button>
