@@ -14,6 +14,12 @@ pollingApp
                     access: {
                         authorizedRoles: [USER_ROLES.user]
                     }
+                }).when('/poll/:id/edit', {
+                    templateUrl: 'views/poll-edit.html',
+                    controller: 'PollEditController',
+                    access: {
+                        authorizedRoles: [USER_ROLES.user]
+                    }
                 }).when('/poll/:id', {
                     templateUrl: 'views/poll-detail.html',
                     controller: 'PollDetailController',

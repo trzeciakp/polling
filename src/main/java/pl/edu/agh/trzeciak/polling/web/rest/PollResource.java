@@ -2,13 +2,13 @@ package pl.edu.agh.trzeciak.polling.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import pl.edu.agh.trzeciak.polling.domain.Poll;
-import pl.edu.agh.trzeciak.polling.repository.PollRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.agh.trzeciak.polling.service.PollService;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -22,9 +22,9 @@ import java.util.List;
 public class PollResource {
 
     private final Logger log = LoggerFactory.getLogger(PollResource.class);
-
+    
     @Inject
-    private PollRepository pollRepository;
+    private PollService pollService;
 
     /**
      * POST  /rest/polls -> Create a new poll.
@@ -35,7 +35,7 @@ public class PollResource {
     @Timed
     public void create(@RequestBody Poll poll) {
         log.debug("REST request to save Poll : {}", poll);
-        pollRepository.save(poll);
+        pollService.createPoll(poll);
     }
 
     /**
@@ -47,7 +47,7 @@ public class PollResource {
     @Timed
     public List<Poll> getAll() {
         log.debug("REST request to get all Polls");
-        return pollRepository.findAll();
+        return pollService.findAll();
     }
 
     /**
@@ -59,7 +59,7 @@ public class PollResource {
     @Timed
     public ResponseEntity<Poll> get(@PathVariable Long id, HttpServletResponse response) {
         log.debug("REST request to get Poll : {}", id);
-        Poll poll = pollRepository.findOne(id);
+        Poll poll = pollService.findOne(id);
         if (poll == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -75,6 +75,6 @@ public class PollResource {
     @Timed
     public void delete(@PathVariable Long id) {
         log.debug("REST request to delete Poll : {}", id);
-        pollRepository.delete(id);
+        pollService.delete(id);
     }
 }

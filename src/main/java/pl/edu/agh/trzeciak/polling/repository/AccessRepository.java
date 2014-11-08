@@ -18,4 +18,7 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
 
     @Query("select a.poll from Access a where a.user.login = ?1")
     List<User> findPollsForUser(String login);
+
+    @Query("delete from Access a where a.poll.id = ?1")
+    void deleteByPollId(Long pollId);
 }
