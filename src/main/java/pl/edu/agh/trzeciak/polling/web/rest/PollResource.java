@@ -1,13 +1,14 @@
 package pl.edu.agh.trzeciak.polling.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.edu.agh.trzeciak.polling.domain.Poll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.agh.trzeciak.polling.domain.Poll;
+import pl.edu.agh.trzeciak.polling.domain.Product;
 import pl.edu.agh.trzeciak.polling.service.PollService;
 
 import javax.inject.Inject;
@@ -64,6 +65,22 @@ public class PollResource {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(poll, HttpStatus.OK);
+    }
+
+    /**
+     * GET  /rest/polls/:id -> get the "id" poll.
+     */
+    @RequestMapping(value = "/rest/polls/{id}/products",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Product>> getProducts(@PathVariable Long id, HttpServletResponse response) {
+        log.debug("REST request to get Poll : {}", id);
+        List<Product> products = pollService.findPollProductsList(id);
+        if (products == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     /**

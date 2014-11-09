@@ -1,12 +1,10 @@
 <div>
 
-    <h2 class="productTitle">Poll - {{currentPoll.name}}</h2>
-    <!--table>
-        <tbody ng:repeat="product in products">
-        <tr><td>{{i.name}}</td><td>{{$index}}</td></tr>
-        <tr ng:repeat="e in i.examples"><td>{{e.name}}</td><td>{{$index}}</td></tr>
-        </tbody>
-    </table-->
+    <h2>Products</h2>
+
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#saveProductModal" ng-click="clear()">
+        <span class="glyphicon glyphicon-flash"></span> Create a new Product
+    </button>
     <div class="modal fade" id="saveProductModal" tabindex="-1" role="dialog" aria-labelledby="myProductLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -36,7 +34,7 @@
                         <div class="form-group">
                             <label>Poll id</label>
                             <input type="number" class="form-control"
-                                   ng-model="product.poll.id" readonly>
+                                   ng-model="product.poll.id">
                         </div>
 
                     </div>
@@ -53,40 +51,35 @@
         </div>
     </div>
 
-    <table class="table productTable">
-        <thead>
-            <tr >
-                <th>o</th>
-                <th ng-repeat="product in products"  >
-                    <span>
-                    {{product.name}}
-                    </span>
-                </th>
-                <th>+</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="product in products">
-
-                <th>{{product.name}}</th>
-                <td ng-repeat="product2 in products">
-                    x
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <button class="btn" data-toggle="modal" data-target="#saveProductModal" ng-click="clear()">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-
-                </th>
-                <td ng-repeat="product2 in products">
-                    x
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <ul >
-        <li ng-repeat="product in products">{{product.name}} in {{product.poll.name}}</li>
-    </ul>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>poll</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="product in products">
+                    <td>{{product.id}}</td>
+                    <td>{{product.name}}</td>
+                    <td>{{product.poll.name}}</td>
+                    <td>
+                        <button type="submit"
+                                ng-click="update(product.id)"
+                                class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(product.id)"
+                                class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span> Delete
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
