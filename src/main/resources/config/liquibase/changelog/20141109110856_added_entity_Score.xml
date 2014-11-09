@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <!--
+        Added the entity Score.
+    -->
+    <changeSet id="20141109110856" author="jhipster">
+        <createTable tableName="T_SCORE">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="value" type="integer"/>
+            <column name="product_a" type="bigint"/>
+            <column name="product_b" type="bigint"/>
+            <column name="user_id" type="varchar(50)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="product_a"
+                                 baseTableName="T_SCORE"
+                                 constraintName="fk_score_product_id_a"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_PRODUCT"/>
+        <addForeignKeyConstraint baseColumnNames="product_b"
+                                 baseTableName="T_SCORE"
+                                 constraintName="fk_score_product_id_b"
+                                 referencedColumnNames="id"
+                                 referencedTableName="T_PRODUCT"/>
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="T_SCORE"
+                                 constraintName="fk_score_user_id"
+                                 referencedColumnNames="login"
+                                 referencedTableName="T_USER"/>
+    </changeSet>
+</databaseChangeLog>
