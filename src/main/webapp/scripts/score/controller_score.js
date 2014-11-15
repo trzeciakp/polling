@@ -1,9 +1,10 @@
 'use strict';
 
-pollingApp.controller('ScoreController', function ($scope, $routeParams, $location, $document,  PollFirstScore, Account, Score) {
+pollingApp.controller('ScoreController', function ($scope, $routeParams, $location, $document, $modal, PollFirstScore, Account, Score) {
 
     $scope.isFetched = false;
     $scope.maxScore = null;
+    $scope.isModalOpened = false;
 
     $scope.reload = function () {
         $scope.isFetched = false;
@@ -14,14 +15,21 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
             $scope.score.$promise.then(function (score) {
 
                 $scope.isFetched = ($scope.score != null);
-                $scope.score.value = 0;
-                $scope.maxScore = $scope.score.productA.poll.maxScore;
-                $scope.isScoreChanged = false;
+                if ($scope.isFetched) {
+                    $scope.score.value = 0;
+                    $scope.maxScore = $scope.score.productA.poll.maxScore;
+                    $scope.isScoreChanged = false;
+                }
             });
 
         });
     };
 
+    var completeScore = function () {
+        Score.save($scope.score, function () {
+            $scope.reload();
+        });
+    };
     $document.bind('keypress', function (event) {
         if (!$scope.isFetched) {
             return;
@@ -34,16 +42,22 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
             if ($scope.isFinished())  {
                 $location.path('/poll/' + $routeParams.id);
             }
-            var shouldChange = true;
             if (!$scope.isScoreChanged) {
-                console.log("show confirmation dialog if not changed and go next")
-            }
-            if (shouldChange) {
-                Score.save($scope.score, function () {
-                    $scope.reload();
-                });
-            }
 
+                if (!$scope.isModalOpened) {
+                    $scope.isModalOpened = true;
+                    $modal.open({
+                        templateUrl: 'myModalContent.html'
+                    }).result.then(function () {
+                            completeScore();
+                            $scope.isModalOpened = false;
+                        }, function() {
+                            $scope.isModalOpened = false;
+                        });
+                }
+            } else {
+                completeScore();
+            }
         }
     });
 
@@ -79,5 +93,12 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
         var computedValue = Math.round($scope.maxScore * (clickedX*2/progressWidth - 1));
         $scope.score.value = computedValue;
     };
+
+
+
+
+
     $scope.reload();
+
+
 });
