@@ -3,7 +3,7 @@
 /* App Module */
 
 var pollingApp = angular.module('pollingApp', ['http-auth-interceptor', 'tmh.dynamicLocale',
-    'ngResource', 'ngRoute', 'ngCookies', 'pollingAppUtils', 'pascalprecht.translate', 'truncate']);
+    'ngResource', 'ngRoute', 'ngCookies', 'pollingAppUtils', 'pascalprecht.translate', 'truncate', 'ui.bootstrap']);
 
 pollingApp
     .config(function ($routeProvider, $httpProvider, $translateProvider, tmhDynamicLocaleProvider, USER_ROLES) {

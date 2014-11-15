@@ -3,6 +3,10 @@
         <div ng-switch-when="false">
             <h2  >{{score.productA.name}} vs. {{score.productB.name}}</h2>
             <p>{{score.value}}</p>
+            <progress ng-click="onProgressBarClicked($event)">
+                <bar value="getProductAPercentValue()" type="info" />
+                <bar value="getProductBPercentValue()" type="warning" />
+            </progress>
         </div>
         <div ng-switch-when="true">
             <h2>Thank you for voting!</h2>
