@@ -1,18 +1,20 @@
 package pl.edu.agh.trzeciak.polling.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.edu.agh.trzeciak.polling.domain.Score;
-import pl.edu.agh.trzeciak.polling.repository.ScoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.agh.trzeciak.polling.domain.Score;
+import pl.edu.agh.trzeciak.polling.repository.ScoreRepository;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * REST controller for managing Score.
@@ -22,6 +24,8 @@ import java.util.List;
 public class ScoreResource {
 
     private final Logger log = LoggerFactory.getLogger(ScoreResource.class);
+
+    Random randomGenerator = new Random(new Date().getTime());
 
     @Inject
     private ScoreRepository scoreRepository;
@@ -78,7 +82,8 @@ public class ScoreResource {
             return new ResponseEntity<>(new Score(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(scores.get(0), HttpStatus.OK);
+        int randomInt = randomGenerator.nextInt(scores.size());
+        return new ResponseEntity<>(scores.get(randomInt), HttpStatus.OK);
     }
 
     /**

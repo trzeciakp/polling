@@ -1,6 +1,6 @@
 'use strict';
 
-pollingApp.controller('ScoreController', function ($scope, $routeParams, $location, $document, $modal, PollFirstScore, Account, Score) {
+pollingApp.controller('ScoreController', function ($scope,$filter, $routeParams, $location, $document, $modal, PollFirstScore, Account, Score) {
 
     $scope.isFetched = false;
     $scope.maxScore = null;
@@ -25,7 +25,7 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
         });
     };
 
-    var completeScore = function () {
+    $scope.completeScore = function () {
         Score.save($scope.score, function () {
             $scope.reload();
         });
@@ -42,21 +42,21 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
             if ($scope.isFinished())  {
                 $location.path('/poll/' + $routeParams.id);
             }
-            if (!$scope.isScoreChanged) {
+            if (!$scope.isScoreChanged && $scope.score.value == 0) {
 
                 if (!$scope.isModalOpened) {
                     $scope.isModalOpened = true;
                     $modal.open({
                         templateUrl: 'myModalContent.html'
                     }).result.then(function () {
-                            completeScore();
+                            $scope.completeScore();
                             $scope.isModalOpened = false;
                         }, function() {
                             $scope.isModalOpened = false;
                         });
                 }
             } else {
-                completeScore();
+                $scope.completeScore();
             }
         }
     });
@@ -81,6 +81,24 @@ pollingApp.controller('ScoreController', function ($scope, $routeParams, $locati
     $scope.getProductBPercentValue = function() {
         return ($scope.maxScore - $scope.score.value)*100/(2*$scope.maxScore);
     };
+
+    var scoreValueToScorePrintValue = function(value) {
+        if (value > 0) {
+            return value;
+        } else if (value < 0) {
+            return $filter('number')(-1/value,2);
+        }
+        return 1;
+    };
+
+    $scope.getProductAScore = function() {
+        return scoreValueToScorePrintValue($scope.score.value);
+    };
+
+    $scope.getProductBScore = function() {
+        return scoreValueToScorePrintValue(-$scope.score.value);
+    };
+
 
     $scope.isFinished = function () {
         return $scope.score.id == null;
