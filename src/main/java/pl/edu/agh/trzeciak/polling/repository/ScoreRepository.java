@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface ScoreRepository extends JpaRepository<Score, Long> {
 
-    @Query("select s from Score s where s.user.login = ?1 and s.productA.poll.id = ?2")
+    @Query("select s from Score s where s.user.login = ?1 and s.productA.poll.id = ?2 and s.value is null")
     List<Score> findAllEmptyScores(String login, Long id);
 }

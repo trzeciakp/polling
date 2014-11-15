@@ -2,8 +2,14 @@
 
 pollingApp.controller('PollController', function ($scope, $location, resolvedPoll, Poll, Session) {
 
+    $scope.user = Session.login;
+
         $scope.polls = resolvedPoll;
-    console.log(resolvedPoll);
+
+        $scope.isOwner = function(poll) {
+            console.log(Session.login);
+            return Session.login === poll.user.login;
+        };
 
         $scope.create = function () {
             $scope.poll.user.login = Session.login;

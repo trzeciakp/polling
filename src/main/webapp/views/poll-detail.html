@@ -81,12 +81,15 @@
 
                 </th>
                 <td ng-repeat="product2 in products">
-                    x
+
                 </td>
             </tr>
         </tbody>
     </table>
-    <ul >
-        <li ng-repeat="product in products">{{product.name}} in {{product.poll.name}}</li>
-    </ul>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="scoreIt()">
+            <span class="glyphicon glyphicon-flag"></span> Score!
+        </button>
+    </div>
 </div>

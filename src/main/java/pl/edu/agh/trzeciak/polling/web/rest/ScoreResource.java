@@ -37,10 +37,13 @@ public class ScoreResource {
         log.debug("REST request to save Score : {}", score);
         scoreRepository.save(score);
     }
+/*
 
-    /**
+    */
+/**
      * GET  /rest/scores -> get all the scores.
-     */
+     *//*
+
     @RequestMapping(value = "/rest/scores",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,6 +51,46 @@ public class ScoreResource {
     public List<Score> getAll() {
         log.debug("REST request to get all Scores");
         return scoreRepository.findAll();
+    }
+*/
+
+    @RequestMapping(value = "/rest/scores",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<Score>> getEmptyScores(@RequestParam("user") String user, @RequestParam("pollid") Long pollId, HttpServletResponse response) {
+        log.debug("REST request to get Score, user: {}, pollId : {}", user, pollId);
+        List<Score> scores = scoreRepository.findAllEmptyScores(user, pollId);
+        if (scores == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(scores, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/rest/scores/first",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Score> getEmptyFirstEmptyScore(@RequestParam("user") String user, @RequestParam("pollid") Long pollId, HttpServletResponse response) {
+        log.debug("REST request to get Score, user: {}, pollId : {}", user, pollId);
+        List<Score> scores = scoreRepository.findAllEmptyScores(user, pollId);
+        if (scores == null || scores.size() == 0) {
+            return new ResponseEntity<>(new Score(), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(scores.get(0), HttpStatus.OK);
+    }
+
+    /**
+     * DELETE  /rest/scores/:id -> delete the "id" score.
+     */
+    @RequestMapping(value = "/rest/scores/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public void delete(@PathVariable Long id) {
+        log.debug("REST request to delete Score : {}", id);
+        scoreRepository.delete(id);
     }
 
     /**
@@ -64,30 +107,5 @@ public class ScoreResource {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(score, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/rest/scores/",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<List<Score>> getEmptyScores(@PathVariable String user, @PathVariable Long pollId, HttpServletResponse response) {
-        log.debug("REST request to get Score, user: {}, pollId : {}", user, pollId);
-        List<Score> scores = scoreRepository.findAllEmptyScores(user, pollId);
-        if (scores == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(scores, HttpStatus.OK);
-    }
-
-    /**
-     * DELETE  /rest/scores/:id -> delete the "id" score.
-     */
-    @RequestMapping(value = "/rest/scores/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public void delete(@PathVariable Long id) {
-        log.debug("REST request to delete Score : {}", id);
-        scoreRepository.delete(id);
     }
 }

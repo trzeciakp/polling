@@ -73,16 +73,18 @@
                     <td>{{poll.maxScore}}</td>
                     <td>{{poll.user.login}}</td>
                     <td>
-                        <button type="submit"
-                                ng-click="update(poll.id)"
-                                class="btn btn-default">
-                            <span class="glyphicon glyphicon-pencil"></span> Edit
-                        </button>
-                        <button type="submit"
-                                ng-click="delete(poll.id)"
-                                class="btn btn-danger">
-                            <span class="glyphicon glyphicon-remove-circle"></span> Delete
-                        </button>
+                        <div ng-show="isOwner(poll)">
+                            <button type="submit"
+                                    ng-click="update(poll.id)"
+                                    class="btn btn-default">
+                                <span class="glyphicon glyphicon-pencil"></span> Edit
+                            </button>
+                            <button type="submit"
+                                    ng-click="delete(poll.id)"
+                                    class="btn btn-danger">
+                                <span class="glyphicon glyphicon-remove-circle"></span> Delete
+                            </button>
+                        </div>
                     </td>
                 </tr>
             </tbody>

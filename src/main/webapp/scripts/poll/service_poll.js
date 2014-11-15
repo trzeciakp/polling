@@ -10,4 +10,14 @@ pollingApp.factory('Poll', function ($resource) {
         'query': { method: 'GET', isArray: true},
         'get': { method: 'GET', isArray: true}
     });
+}).factory('PollScores', function ($resource) {
+    return $resource('app/rest/scores/', {}, {
+        'query': { method: 'GET', isArray: true},
+        'get': { method: 'GET', isArray: true}
+    });
+}).factory('PollFirstScore', function ($resource) {
+    return $resource('app/rest/scores/first/', {}, {
+        'query': { method: 'GET', isArray: true},
+        'get': { method: 'GET'}
+    });
 });

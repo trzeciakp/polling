@@ -25,6 +25,11 @@ pollingApp
                     controller: 'PollDetailController',
                     access: {
                         authorizedRoles: [USER_ROLES.user]
+                    },
+                    resolve: {
+                        resolvedUser: ['Session', function(Session) {
+                            return Session.login;
+                        }]
                     }
                 })
         });
