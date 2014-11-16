@@ -8,7 +8,7 @@ pollingApp.controller('PollController', function ($scope, $location, resolvedPol
 
         $scope.isOwner = function(poll) {
             console.log(Session.login);
-            return Session.login === poll.user.login;
+            return Session.login === poll.owner;
         };
 
         $scope.create = function () {
@@ -36,5 +36,9 @@ pollingApp.controller('PollController', function ($scope, $location, resolvedPol
         $scope.clear = function () {
             $scope.poll = {name: null, maxScore: null, id: null, user: {}};
             $scope.poll.user.login = Session.login;
+        };
+
+        $scope.scoreIt = function(id) {
+            $location.path("/score/" + id);
         };
     });

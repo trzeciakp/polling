@@ -38,7 +38,7 @@
                         <div class="form-group">
                             <label>Owner</label>
                             <input type="text" class="form-control"
-                                   ng-model="poll.user.login" readonly>
+                                   ng-model="poll.owner" readonly>
                         </div>
 
                     </div>
@@ -62,29 +62,34 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>MaxScore</th>
+                    <th>scored</th>
                     <th>user</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="poll in polls">
+                <tr ng-repeat="poll in polls" ng-class="{'success': poll.emptyScores === 0}">
                     <td>{{poll.id}}</td>
                     <td><a href="#/poll/{{poll.id}}">{{poll.name}}</a></td>
                     <td>{{poll.maxScore}}</td>
-                    <td>{{poll.user.login}}</td>
+                    <td>{{poll.allScores - poll.emptyScores}} / {{poll.allScores}}</td>
+                    <td>{{poll.owner}}</td>
                     <td>
-                        <div ng-show="isOwner(poll)">
-                            <button type="submit"
-                                    ng-click="update(poll.id)"
-                                    class="btn btn-default">
-                                <span class="glyphicon glyphicon-pencil"></span> Edit
-                            </button>
-                            <button type="submit"
-                                    ng-click="delete(poll.id)"
-                                    class="btn btn-danger">
-                                <span class="glyphicon glyphicon-remove-circle"></span> Delete
-                            </button>
-                        </div>
+                        <button type="submit"
+                                ng-click="update(poll.id)"
+                                class="btn btn-default"
+                                ng-show="isOwner(poll)">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </button>
+                        <button type="submit"
+                                ng-click="delete(poll.id)"
+                                class="btn btn-danger"
+                                ng-show="isOwner(poll)">
+                            <span class="glyphicon glyphicon-remove-circle"></span> Delete
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="scoreIt(poll.id)" ng-show="poll.emptyScores > 0">
+                            <span class="glyphicon glyphicon-flag"></span> Score!
+                        </button>
                     </td>
                 </tr>
             </tbody>

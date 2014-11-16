@@ -7,12 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.agh.trzeciak.polling.domain.Access;
 import pl.edu.agh.trzeciak.polling.domain.Poll;
 import pl.edu.agh.trzeciak.polling.domain.Product;
+import pl.edu.agh.trzeciak.polling.repository.AccessRepository;
+import pl.edu.agh.trzeciak.polling.repository.ScoreRepository;
 import pl.edu.agh.trzeciak.polling.service.PollService;
+import pl.edu.agh.trzeciak.polling.service.UserService;
+import pl.edu.agh.trzeciak.polling.web.rest.dto.PollDTO;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +32,13 @@ public class PollResource {
     
     @Inject
     private PollService pollService;
+
+    @Inject
+    private AccessRepository accessRepository;
+    @Inject
+    private UserService userService;
+    @Inject
+    private ScoreRepository scoreRepository;
 
     /**
      * POST  /rest/polls -> Create a new poll.
@@ -46,9 +59,18 @@ public class PollResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Poll> getAll() {
+    public List<PollDTO> getAll() {
         log.debug("REST request to get all Polls");
-        return pollService.findAll();
+        String login = userService.getCurrentUserLogin();
+        List<Poll> pollsForUser = accessRepository.findPollsForUser(login);
+        List<PollDTO> result = new ArrayList<PollDTO>();
+        for (Poll poll : pollsForUser) {
+            int emptyScores = scoreRepository.countEmptyUserScoresForPoll(login, poll.getId());
+            int allScores = scoreRepository.countAllUserScoresForPoll(login, poll.getId());
+            PollDTO pollDTO = new PollDTO(poll, emptyScores, allScores);
+            result.add(pollDTO);
+        }
+        return result;
     }
 
     /**
@@ -64,6 +86,12 @@ public class PollResource {
         if (poll == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        String login = userService.getCurrentUserLogin();
+        Access access = accessRepository.hasAccess(login, poll.getId());
+        if (access == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         return new ResponseEntity<>(poll, HttpStatus.OK);
     }
 

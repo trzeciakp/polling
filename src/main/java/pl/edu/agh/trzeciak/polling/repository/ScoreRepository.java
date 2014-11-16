@@ -13,4 +13,10 @@ public interface ScoreRepository extends JpaRepository<Score, Long> {
 
     @Query("select s from Score s where s.user.login = ?1 and s.productA.poll.id = ?2 and s.value is null")
     List<Score> findAllEmptyScores(String login, Long id);
+
+    @Query("select count(s) from Score s where s.user.login = ?1 and s.productA.poll.id = ?2")
+    Integer countAllUserScoresForPoll(String login, Long id);
+
+    @Query("select count(s) from Score s where s.user.login = ?1 and s.productA.poll.id = ?2 and s.value is null")
+    Integer countEmptyUserScoresForPoll(String login, Long id);
 }
