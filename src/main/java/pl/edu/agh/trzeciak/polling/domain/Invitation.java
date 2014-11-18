@@ -1,19 +1,16 @@
 package pl.edu.agh.trzeciak.polling.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A Invitation.
  */
 @Entity
-@Table(name = "T_INVITATION")
+@Table(name = "T_INVITATION", uniqueConstraints = @UniqueConstraint(columnNames = {"email", "poll_id"}))
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Invitation implements Serializable {
 
@@ -26,6 +23,14 @@ public class Invitation implements Serializable {
 
     @ManyToOne
     private Poll poll;
+
+    public Invitation() {
+    }
+
+    public Invitation(String email, Poll poll) {
+        this.email = email;
+        this.poll = poll;
+    }
 
     public Long getId() {
         return id;
@@ -53,23 +58,22 @@ public class Invitation implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        Invitation invitation = (Invitation) o;
+        Invitation that = (Invitation) o;
 
-        if (id != null ? !id.equals(invitation.id) : invitation.id != null) return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
+        if (poll != null ? !poll.equals(that.poll) : that.poll != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        int result = email != null ? email.hashCode() : 0;
+        result = 31 * result + (poll != null ? poll.hashCode() : 0);
+        return result;
     }
 
     @Override

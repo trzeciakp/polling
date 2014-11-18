@@ -1,6 +1,7 @@
 package pl.edu.agh.trzeciak.polling.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import pl.edu.agh.trzeciak.polling.domain.Access;
 import pl.edu.agh.trzeciak.polling.domain.Poll;
@@ -23,5 +24,6 @@ public interface AccessRepository extends JpaRepository<Access, Long> {
     Access hasAccess(String login, long pollId);
 
     @Query("delete from Access a where a.poll.id = ?1")
+    @Modifying
     void deleteByPollId(Long pollId);
 }

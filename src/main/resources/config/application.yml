@@ -17,11 +17,18 @@ spring:
     mail:
         host: localhost
         port: 25
-        user:
-        password:
+        user: user
+        password: password
         protocol: smtp
         tls: false
         auth: false
+#        host: poczta.agh.edu.pl
+#        port: 465
+#        user: kwaki@student.agh.edu.pl
+#        password: test111!
+#        protocol: smtp
+#        tls: true
+#        auth: true
         from: polling@localhost
 
     messageSource:

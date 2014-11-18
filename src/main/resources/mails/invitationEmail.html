@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{email.invitation.title}">Polling App invitation</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <p th:text="#{email.invitation.greeting}">
+            Hi,
+        </p>
+        <p th:text="#{email.invitation.text1(${poll.name})}">
+            You have been invited to the poll, please click on the URL below to register and fill it:
+        </p>
+        <p>
+            <a th:href="@{|${baseUrl}/#/poll/${poll.id}|}">invitation Link</a>
+        </p>
+        <p>
+            <span th:text="#{email.invitation.text2}">Regards, </span>
+            <br/>
+            <em th:text="#{email.signature}">Polling app.</em>
+        </p>
+    </body>
+</html>

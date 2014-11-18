@@ -26,6 +26,14 @@ public class Access implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Access() {
+    }
+
+    public Access(Poll poll, User user) {
+        this.poll = poll;
+        this.user = user;
+    }
+
     public Long getId() {
         return id;
     }

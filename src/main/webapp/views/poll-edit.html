@@ -2,7 +2,7 @@
 
     <h2>Poll - {{currentPoll.name}}</h2>
 
-    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#savePollModal" ng-click="clear()">
+    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#inviteModal" ng-click="clear()">
         <span class="glyphicon glyphicon-flash"></span> <span translate="poll.invite">Invite!</span>
     </button>
     <button type="submit"
@@ -10,6 +10,58 @@
             class="btn btn-default btn-lg">
         <span class="glyphicon glyphicon-pencil"></span> Edit
     </button>
+
+    <div class="modal fade" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="inviteLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="form" role="form" novalidate
+                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+                      ng-submit="invite()" show-validation>
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clear()">&times;</button>
+                        <h4 class="modal-title" id="inviteLabel">Invite!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label translate="global.form.email">E-mail</label>
+                            <input class="form-control" name="email" placeholder="{{'global.form.email.placeholder' | translate}}"
+                                   ng-model="email" ng-minlength=5 ng-maxlength=100 required ui-validate='{blacklist : notBlackListed}'>
+                            <span ng-show='form.email.$error.blacklist'>This e-mail is black-listed!</span>
+                            <div ng-show="form.email.$dirty && form.email.$invalid">
+                                <p class="help-block"
+                                   ng-show="form.email.$error.required" translate="global.messages.validate.email.required">
+                                    Your e-mail is required.
+                                </p>
+                                <p class="help-block"
+                                   ng-show="form.email.$error.email" translate="global.messages.validate.email.invalid">
+                                    Your e-mail is invalid.
+                                </p>
+                                <p class="help-block"
+                                   ng-show="form.email.$error.minlength" translate="global.messages.validate.email.minlength">
+                                    Your e-mail is required to be at least 5 characters
+                                </p>
+                                <p class="help-block"
+                                   ng-show="form.email.$error.maxlength" translate="global.messages.validate.email.maxlength">
+                                    Your e-mail cannot be longer than 100 characters
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="savePollModal" tabindex="-1" role="dialog" aria-labelledby="myPollLabel"
          aria-hidden="true">
@@ -61,6 +113,34 @@
         </div>
      </div>
 
+    <pre>
+        {{result}}
+                trzeciakp@gmail.com; user@user; kwaki@o2.pl
+    </pre>
+
+    <h3><span>Invitations</span></h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="invitation in invitations">
+                <td>{{invitation.email}}</td>
+                <td>
+                    <button type="submit"
+                            class="btn btn-danger">
+                            <!--ng-click="deleteUser(user.id)"-->
+                        <span class="glyphicon glyphicon-remove-circle"></span> Delete
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <h3><span translate="poll.usersAllowed">Users allowed</span></h3>
     <div class="table-responsive">
         <table class="table table-striped">

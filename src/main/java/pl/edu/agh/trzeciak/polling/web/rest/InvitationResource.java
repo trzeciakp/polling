@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.agh.trzeciak.polling.service.InvitationService;
+import pl.edu.agh.trzeciak.polling.service.UserService;
+import pl.edu.agh.trzeciak.polling.web.rest.dto.InvitationRequestDTO;
+import pl.edu.agh.trzeciak.polling.web.rest.dto.InvitationResultDTO;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -26,16 +30,26 @@ public class InvitationResource {
     @Inject
     private InvitationRepository invitationRepository;
 
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private InvitationService invitationService;
+
     /**
      * POST  /rest/invitations -> Create a new invitation.
      */
     @RequestMapping(value = "/rest/invitations",
             method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public void create(@RequestBody Invitation invitation) {
+    public InvitationResultDTO create(@RequestBody InvitationRequestDTO invitation) {
         log.debug("REST request to save Invitation : {}", invitation);
-        invitationRepository.save(invitation);
+        InvitationResultDTO invitationResultDTO = invitationService.invite(invitation.getEmails(), invitation.getPoll());
+
+        log.debug("REST result to save Invitation : {}", invitationResultDTO);
+        return invitationResultDTO;
     }
 
     /**
