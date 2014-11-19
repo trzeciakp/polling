@@ -16,6 +16,7 @@ import pl.edu.agh.trzeciak.polling.web.rest.dto.InvitationResultDTO;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.QueryParam;
 import java.util.List;
 
 /**
@@ -59,9 +60,14 @@ public class InvitationResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Invitation> getAll() {
+    public List<Invitation> getAll(@QueryParam("pollid") String pollid) {
+
         log.debug("REST request to get all Invitations");
-        return invitationRepository.findAll();
+        if (pollid ==null) {
+            return invitationRepository.findAll();
+        } else {
+            return invitationRepository.findInvitationByPollId(Long.valueOf(pollid));
+        }
     }
 
     /**

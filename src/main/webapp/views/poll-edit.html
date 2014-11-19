@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <label translate="global.form.email">E-mail</label>
                             <input class="form-control" name="email" placeholder="{{'global.form.email.placeholder' | translate}}"
-                                   ng-model="email" ng-minlength=5 ng-maxlength=100 required ui-validate='{blacklist : notBlackListed}'>
+                                   ng-model="emails" ng-minlength=5 ng-maxlength=100 required ui-validate='{blacklist : notBlackListed}'>
                             <span ng-show='form.email.$error.blacklist'>This e-mail is black-listed!</span>
                             <div ng-show="form.email.$dirty && form.email.$invalid">
                                 <p class="help-block"
@@ -112,11 +112,92 @@
             </div>
         </div>
      </div>
+    <div class="modal fade" id="saveProductModal" tabindex="-1" role="dialog" aria-labelledby="myProductLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="form" role="form" novalidate
+                      class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+                      ng-submit="createProduct()">
 
-    <pre>
-        {{result}}
-                trzeciakp@gmail.com; user@user; kwaki@o2.pl
-    </pre>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                                ng-click="clearProduct()">&times;</button>
+                        <h4 class="modal-title" id="myProductLabel">Create or edit a Product</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="id"
+                                   ng-model="product.id" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control"
+                                   ng-model="product.name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Poll id</label>
+                            <input type="number" class="form-control"
+                                   ng-model="product.poll.id" readonly>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                        </button>
+                        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-save"></span> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <table class="table productTable">
+        <thead>
+        <tr >
+            <th>o</th>
+            <th ng-repeat="product in products"  >
+                    <span>
+                    {{product.name}}
+                    </span>
+            </th>
+            <th>
+
+                <button class="btn" data-toggle="modal" data-target="#saveProductModal" ng-click="clearProduct()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="product in products">
+
+            <th>{{product.name}}</th>
+            <td ng-repeat="product2 in products">
+
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>
+                <button class="btn" data-toggle="modal" data-target="#saveProductModal" ng-click="clearProduct()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+
+            </th>
+            <td ng-repeat="product2 in products">
+
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
 
     <h3><span>Invitations</span></h3>
     <div class="table-responsive">
@@ -158,7 +239,8 @@
                     <td>
                         <button type="submit"
                                 ng-click="deleteUser(user.id)"
-                                class="btn btn-danger">
+                                class="btn btn-danger"
+                                ng-show="isOwner(user.login)">
                             <span class="glyphicon glyphicon-remove-circle"></span> Delete
                         </button>
                     </td>

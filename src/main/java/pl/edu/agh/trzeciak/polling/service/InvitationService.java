@@ -44,6 +44,8 @@ public class InvitationService {
 
     @Inject
     private SpringTemplateEngine templateEngine;
+    @Inject
+    private ScoreService scoreService;
 
     public InvitationResultDTO invite(List<String> emails, Poll poll) {
         Set<String> emailsLC = new HashSet<>();
@@ -74,6 +76,8 @@ public class InvitationService {
         }
         invitationRepository.save(invitationsToAdd);
         accessRepository.save(accessesToAdd);
+        scoreService.createScoresForAccesses(accessesToAdd);
+
         InvitationResultDTO result = new InvitationResultDTO();
         result.setEmails(new ArrayList<String>(emailsLC));
 
@@ -87,5 +91,16 @@ public class InvitationService {
         variables.put("baseUrl", baseUrl);
         IContext context = new Context(locale, variables);
         return templateEngine.process("invitationEmail", context);
+    }
+
+    public List<Access> confirmInvitations(User user) {
+        List<Invitation> invitationByEmail = invitationRepository.findInvitationByEmail(user.getEmail());
+        List<Access> accesses = new ArrayList<>();
+        for (Invitation invitation : invitationByEmail) {
+            accesses.add(new Access(invitation.getPoll(), user));
+        }
+        accessRepository.save(accesses);
+        invitationRepository.delete(invitationByEmail);
+        return accesses;
     }
 }

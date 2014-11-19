@@ -118,10 +118,3 @@ ul#strength {
     margin-bottom: 50px;
 }
 
-.productTable thead th span {
-
-    transform:
-        translate(-15px, -21px)
-        rotate(315deg);
-     width: 40px;
-}

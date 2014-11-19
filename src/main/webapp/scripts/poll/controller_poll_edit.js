@@ -1,6 +1,6 @@
 'use strict';
 
-pollingApp.controller('PollEditController', function ($scope, $routeParams, Poll, Invitation, Access, Session) {
+pollingApp.controller('PollEditController', function ($scope, $routeParams, Poll, Product, PollProducts, Invitation, Access, Session) {
     var EMAIL_REGEXP = /^\s*[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\s*$/i;
 
         $scope.polls = [];
@@ -11,12 +11,46 @@ pollingApp.controller('PollEditController', function ($scope, $routeParams, Poll
     $scope.currentPoll = Poll.get({id: $routeParams.id});
     $scope.polls[0] = $scope.currentPoll;
     $scope.users = Access.get({pollId: $routeParams.id});
-    $scope.invitations = Invitation.get({pollId: $routeParams.id});
+    $scope.invitations = Invitation.get({pollid: $routeParams.id});
     $scope.result = {};
 
+    $scope.products = PollProducts.get({id: $routeParams.id});
+    $scope.clearProduct = function () {
+        $scope.product = {name: null, id: null, poll: $scope.currentPoll};
+        console.log($scope.product);
+    };
+
+    $scope.isOwner = function (login) {
+        console.log($scope.currentPoll);
+        return login !== $scope.currentPoll.user.login;
+    }
+
+    $scope.createProduct = function () {
+        Product.save($scope.product,
+            function () {
+                $scope.products = PollProducts.get({id: $routeParams.id});
+                $('#saveProductModal').modal('hide');
+                $scope.clear();
+            });
+    };
     $scope.update = function (id) {
         $scope.poll = Poll.get({id: id});
         $('#savePollModal').modal('show');
+    };
+
+    $scope.invite = function () {
+        var invitationRequestDTO = {emails: csvToArray($scope.emails), poll: $scope.currentPoll};
+        console.log(invitationRequestDTO);
+        Invitation.save(invitationRequestDTO, function (result) {
+            console.log(result);
+            $('#inviteModal').modal('hide');
+            $scope.clear();
+            $scope.result = result;
+            $scope.invitations = Invitation.get({pollid: $routeParams.id});
+            $scope.currentPoll = Poll.get({id: $routeParams.id});
+            $scope.users = Access.get({pollId: $routeParams.id});
+            $scope.polls[0] = $scope.currentPoll;
+        });
     };
 
     $scope.isRecipientListInvalid = function() {
@@ -33,19 +67,6 @@ pollingApp.controller('PollEditController', function ($scope, $routeParams, Poll
         return false;
     };
 
-    $scope.invite = function () {
-        var invitationRequestDTO = {emails: csvToArray($scope.emails), poll: $scope.currentPoll};
-        console.log(invitationRequestDTO);
-        Invitation.save(invitationRequestDTO, function (result) {
-            console.log(result);
-            $('#inviteModal').modal('hide');
-            $scope.clear();
-            $scope.result = result;
-            $scope.invitations = Invitation.get({pollId: $routeParams.id});
-            $scope.currentPoll = Poll.get({id: $routeParams.id});
-            $scope.polls[0] = $scope.currentPoll;
-        });
-    };
 
     //TO remove?????
         $scope.create = function () {

@@ -3,11 +3,11 @@ server:
 
 spring:
     profiles: dev
-    
+
     datasource:
         dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
-        url: 
-        databaseName: polling
+        url:
+        databaseName: pollingProd
         serverName: localhost
         username: postgres
         password: admin

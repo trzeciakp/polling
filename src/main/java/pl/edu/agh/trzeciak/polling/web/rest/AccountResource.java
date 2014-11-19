@@ -1,15 +1,6 @@
 package pl.edu.agh.trzeciak.polling.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import pl.edu.agh.trzeciak.polling.domain.Authority;
-import pl.edu.agh.trzeciak.polling.domain.PersistentToken;
-import pl.edu.agh.trzeciak.polling.domain.User;
-import pl.edu.agh.trzeciak.polling.repository.PersistentTokenRepository;
-import pl.edu.agh.trzeciak.polling.repository.UserRepository;
-import pl.edu.agh.trzeciak.polling.security.SecurityUtils;
-import pl.edu.agh.trzeciak.polling.service.MailService;
-import pl.edu.agh.trzeciak.polling.service.UserService;
-import pl.edu.agh.trzeciak.polling.web.rest.dto.UserDTO;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.context.SpringWebContext;
+import pl.edu.agh.trzeciak.polling.domain.Access;
+import pl.edu.agh.trzeciak.polling.domain.Authority;
+import pl.edu.agh.trzeciak.polling.domain.PersistentToken;
+import pl.edu.agh.trzeciak.polling.domain.User;
+import pl.edu.agh.trzeciak.polling.repository.PersistentTokenRepository;
+import pl.edu.agh.trzeciak.polling.repository.UserRepository;
+import pl.edu.agh.trzeciak.polling.security.SecurityUtils;
+import pl.edu.agh.trzeciak.polling.service.InvitationService;
+import pl.edu.agh.trzeciak.polling.service.MailService;
+import pl.edu.agh.trzeciak.polling.service.ScoreService;
+import pl.edu.agh.trzeciak.polling.service.UserService;
+import pl.edu.agh.trzeciak.polling.web.rest.dto.UserDTO;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
@@ -60,6 +63,11 @@ public class AccountResource {
     @Inject
     private MailService mailService;
 
+    @Inject
+    private InvitationService invitationService;
+    @Inject
+    private ScoreService scoreService;
+
     /**
      * POST  /rest/register -> register the user.
      */
@@ -77,6 +85,8 @@ public class AccountResource {
                     userDTO.getLastName(), userDTO.getEmail().toLowerCase(), userDTO.getLangKey());
             final Locale locale = Locale.forLanguageTag(user.getLangKey());
             String content = createHtmlContentFromTemplate(user, locale, request, response);
+            List<Access> accesses = invitationService.confirmInvitations(user);
+            scoreService.createScoresForAccesses(accesses);
             mailService.sendActivationEmail(user.getEmail(), content, locale);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }

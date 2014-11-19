@@ -1,6 +1,6 @@
 {
     "global": {
-        "title": "polling",
+        "title": "Polling App",
         "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
         "menu": {
             "home": "Home",
@@ -317,7 +317,7 @@
         "title": "Error page!",
         "403": "You are not authorized to access the page."
     },
-    "footer": "This is your footer",
+    "footer": "",
     "poll" : {
         "usersAllowed": "Users allowed:",
         "invite": "Invite!"

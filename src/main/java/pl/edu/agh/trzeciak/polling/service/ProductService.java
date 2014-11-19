@@ -43,9 +43,11 @@ public class ProductService {
         Product productA;
         Product productB;
         for (Product product1 : products) {
-            if (product.getId() <= product1.getId()) {
+            if (product.getId() < product1.getId()) {
                 productA = product;
                 productB = product1;
+            } else if (product.getId().equals(product1.getId())) {
+                continue;
             } else {
                 productA = product1;
                 productB = product;
